@@ -30,7 +30,7 @@ exports.getOneSauce = (req, res, next) => {
 exports.modifySauce = (req, res, next) => {
     const sauceObject = req.file ? {
         ...JSON.parse(req.body.sauce),
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        imageUrl: `${req.protocol}://${req.get('host')}/src/images/${req.file.filename}`
     } : { ...req.body };
   
     delete sauceObject._userId;
@@ -55,7 +55,7 @@ exports.deleteSauce = (req, res, next) => {
             if (sauce.userId != req.auth.userId) {
                 res.status(401).json({message: 'Not authorized'});
             } else {
-                const filename = sauce.imageUrl.split('/images/')[1];
+                const filename = sauce.imageUrl.split('/src/images/')[1];
                 fs.unlink(`images/${filename}`, () => {
                     Sauce.deleteOne({_id: req.params.id})
                         .then(() => { res.status(200).json({message: 'Deleted sauce !'})})
